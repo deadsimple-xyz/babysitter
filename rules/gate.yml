@@ -1,0 +1,33 @@
+description: Command gate policy
+
+allow:
+  - pattern: "^(rspec|ruby|bundle|jest|pytest|npx|yarn test)"
+    reason: "test runners"
+  - pattern: "^(curl|wget|fetch)\\s"
+    reason: "internet reads"
+  - pattern: "^(cat|ls|find|grep|rg|head|tail|wc|file|stat)\\s"
+    reason: "filesystem reads"
+  - pattern: "^git\\s+(status|log|diff|show|branch|remote|fetch)"
+    reason: "git reads"
+  - pattern: "^(echo|printf|pwd|env|which|type|uname)"
+    reason: "harmless utilities"
+  - pattern: "^mkdir\\s"
+    reason: "directory creation"
+
+deny:
+  - pattern: "(deploy|heroku|kubectl)"
+    reason: "production deployment not allowed"
+  - pattern: "^rake\\s.*prod"
+    reason: "production rake tasks not allowed"
+  - pattern: "rm\\s+-rf"
+    reason: "destructive removal not allowed"
+  - pattern: "DROP\\s+TABLE"
+    reason: "destructive SQL not allowed"
+  - pattern: "git\\s+push\\s+.*(main|master|prod)"
+    reason: "pushing to protected branches not allowed"
+  - pattern: "git\\s+push\\s+--force"
+    reason: "force pushing not allowed"
+  - pattern: "git\\s+reset\\s+--hard"
+    reason: "destructive git reset not allowed"
+
+# Everything not matched by allow or deny → ask the user

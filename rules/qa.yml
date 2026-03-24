@@ -1,0 +1,8 @@
+description: QA agent command policies
+
+role: qa
+
+# Extra commands allowed for QA beyond global gate.yml
+allowed_commands:
+  - "^(rspec|ruby|bundle|npm|yarn|node|python|pytest)\\s"
+  - "^bash\\s+\\.hats/qa/run-tests\\.sh"

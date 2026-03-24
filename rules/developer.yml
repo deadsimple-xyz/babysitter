@@ -1,0 +1,8 @@
+description: Developer agent command policies
+
+role: developer
+
+# Extra commands allowed for developer beyond global gate.yml
+allowed_commands:
+  - "^(rspec|ruby|bundle|rake|npm|yarn|node|python|pytest)\\s"
+  - "^(make|cargo|go)\\s"

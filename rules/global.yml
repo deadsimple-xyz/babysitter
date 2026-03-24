@@ -1,0 +1,65 @@
+description: Global rules — mirrors hats framework file boundaries
+
+file_boundaries:
+  manager:
+    owns:
+      - ".hats/manager/**/*"
+      - ".hats/shared/manager2team.md"
+    cannot_touch:
+      - ".hats/designer/**/*"
+      - ".hats/cto/**/*"
+      - ".hats/qa/**/*"
+      - "lib/**/*"
+      - "app/**/*"
+      - "src/**/*"
+  designer:
+    owns:
+      - ".hats/designer/**/*"
+      - ".hats/shared/designer2team.md"
+    cannot_touch:
+      - ".hats/manager/**/*"
+      - ".hats/cto/**/*"
+      - ".hats/qa/**/*"
+      - "lib/**/*"
+      - "app/**/*"
+      - "src/**/*"
+  cto:
+    owns:
+      - ".hats/shared/stack.md"
+      - ".hats/shared/setup.md"
+      - ".hats/shared/api.md"
+      - ".hats/shared/cto2team.md"
+    cannot_touch:
+      - ".hats/manager/**/*"
+      - ".hats/designer/**/*"
+      - ".hats/qa/**/*"
+      - "lib/**/*"
+      - "app/**/*"
+      - "src/**/*"
+  qa:
+    owns:
+      - ".hats/qa/**/*"
+      - ".hats/shared/qa-report.md"
+      - ".hats/shared/qa2dev.md"
+      - ".hats/shared/qa2designer.md"
+    cannot_touch:
+      - ".hats/manager/**/*"
+      - ".hats/designer/**/*"
+      - ".hats/cto/**/*"
+      - "lib/**/*"
+      - "app/**/*"
+      - "src/**/*"
+  developer:
+    owns:
+      - "lib/**/*"
+      - "app/**/*"
+      - "src/**/*"
+      - ".hats/shared/setup.md"
+      - ".hats/shared/api.md"
+      - ".hats/shared/dev2qa.md"
+      - ".hats/shared/dev2designer.md"
+    cannot_touch:
+      - ".hats/manager/**/*"
+      - ".hats/designer/**/*"
+      - ".hats/cto/**/*"
+      - ".hats/qa/**/*"

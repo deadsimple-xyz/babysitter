@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift(File.expand_path("../lib", __dir__))
+
+require "supervisor"
+
+def usage
+  $stderr.puts <<~USAGE
+    Usage: babysitter <workdir> "<prompt>"
+
+    Supervises a development session using role-based agents.
+    Each agent runs in a fresh Claude session — no context accumulation.
+
+    Arguments:
+      workdir     Path to the project directory
+      prompt      What you want done (given to the Brain to plan)
+
+    Environment:
+      ANTHROPIC_API_KEY   Required (for the Brain)
+
+    Examples:
+      babysitter ../design-gpt "finish the tests"
+      babysitter ../my-app "implement the login feature"
+      babysitter . "fix the failing auth tests"
+  USAGE
+  exit 1
+end
+
+args = ARGV.dup
+workdir = nil
+prompt = nil
+
+while arg = args.shift
+  case arg
+  when "--help", "-h"
+    usage
+  else
+    if workdir.nil?
+      workdir = arg
+    elsif prompt.nil?
+      prompt = arg
+    else
+      $stderr.puts "Error: unexpected argument: #{arg}"
+      usage
+    end
+  end
+end
+
+usage unless workdir && prompt
+
+unless File.directory?(workdir)
+  $stderr.puts "Error: not a directory: #{workdir}"
+  exit 1
+end
+
+unless ENV["ANTHROPIC_API_KEY"]
+  $stderr.puts "Error: ANTHROPIC_API_KEY not set"
+  exit 1
+end
+
+supervisor = Babysitter::Supervisor.new(
+  working_dir: workdir,
+  prompt: prompt
+)
+
+success = supervisor.run
+exit(success ? 0 : 1)
