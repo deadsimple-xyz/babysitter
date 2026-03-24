@@ -2,6 +2,7 @@ require "json"
 require "net/http"
 require "uri"
 require "fileutils"
+require_relative "config"
 
 module Babysitter
   class Brain
@@ -10,7 +11,7 @@ module Babysitter
     def initialize(session_dir:, model: "claude-sonnet-4-6", api_key: nil)
       @session_dir = session_dir
       @model = model
-      @api_key = api_key || ENV["ANTHROPIC_API_KEY"]
+      @api_key = api_key || Config.api_key!
       FileUtils.mkdir_p(@session_dir)
     end
 
