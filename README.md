@@ -8,6 +8,8 @@ babysitter ../my-app "finish the tests"
 
 Babysitter spawns Claude Code agents (Manager, QA, Developer) one at a time, each in a clean session. A Brain (Claude API) evaluates every step and decides what happens next. If something goes wrong, it stops and tells you why.
 
+Built on top of the [Hats](https://github.com/deadsimple-xyz/hats) framework. Hats defines the roles and project structure (`.hats/` directory). Babysitter automates the pipeline — replacing the human who would normally switch between roles manually.
+
 ## How It Works
 
 ```
@@ -58,7 +60,33 @@ No gem dependencies — pure Ruby stdlib.
 ### Requirements
 
 - **Claude Code CLI** (`claude`) — [install](https://docs.anthropic.com/en/docs/claude-code)
+- **Hats** — [install](https://github.com/deadsimple-xyz/hats) (for project setup with `/hats:init`)
 - **Anthropic API key** — for the Brain (see below)
+
+## Project Setup
+
+Babysitter works with projects that have a `.hats/` directory. Set one up with Hats:
+
+```bash
+cd my-app
+claude --plugin-dir ../hats    # start Claude Code with Hats plugin
+/hats:init                     # creates .hats/ directory structure
+/hats:manager                  # write specs interactively (optional)
+```
+
+Once `.hats/` exists, you can use babysitter to automate everything, or keep switching roles manually with Hats — they share the same files.
+
+### Two ways to work
+
+| | **Hats (manual)** | **Babysitter (automated)** |
+|---|---|---|
+| **How** | `claude --plugin-dir ../hats` | `babysitter ../my-app "do X"` |
+| **Who switches roles** | You (the human) | The Brain |
+| **Context** | One long session (can degrade) | Fresh session per step |
+| **Control** | Interactive — you decide everything | Autonomous — Brain decides, stops on problems |
+| **Best for** | Exploring, discussing, fixing specific issues | Grinding through implementation, running pipelines |
+
+You can mix both. Start with babysitter, it gets stuck, jump into Hats to fix something manually, then re-run babysitter.
 
 ## API Key Setup
 
@@ -92,7 +120,6 @@ The Brain uses Claude Sonnet by default — each call is ~1K tokens, so a full s
 ## Usage
 
 ```bash
-# Basic — Brain plans everything
 babysitter <workdir> "<prompt>"
 
 # Examples
@@ -102,7 +129,7 @@ babysitter ../my-app "fix the failing auth tests"
 babysitter . "add email validation"
 ```
 
-Babysitter reads the project's `.hats/` directory to understand current state — what specs exist, what tests exist, what's passing or failing — and plans accordingly.
+Babysitter reads the project's `.hats/` directory to understand current state — what specs exist, what tests exist, what's passing or failing — and plans accordingly. If no `.hats/` exists, the Manager will create the initial structure.
 
 ## What Each Role Does
 
@@ -152,16 +179,6 @@ Gate rules are in `rules/gate.yml`.
 - **Max 10 steps** per session (safety limit)
 - **Max 5 developer passes** — if tests still fail after 5 attempts, babysitter stops
 - Brain stops immediately on role violations (developer editing tests, QA writing code, etc.)
-
-## Compatible with Hats
-
-Babysitter uses the same `.hats/` directory structure as the [Hats](https://github.com/deadsimple-xyz/hats) framework. You can:
-
-1. Run babysitter for automated sessions
-2. Jump into manual Hats mode (`claude --plugin-dir ../hats`) to fix something
-3. Re-run babysitter to continue
-
-They read and write the same files.
 
 ## License
 
